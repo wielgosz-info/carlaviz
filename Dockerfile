@@ -1,10 +1,9 @@
 # Frontend build stage
 FROM node:12-alpine AS frontend
 
-COPY ./frontend /home/carla/carlaviz/frontend
-
 RUN apk --no-cache add git
 
+COPY ./frontend /home/carla/carlaviz/frontend
 WORKDIR /home/carla/carlaviz/frontend
 RUN yarn && yarn build
 

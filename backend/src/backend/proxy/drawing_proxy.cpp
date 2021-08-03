@@ -141,13 +141,35 @@ void DrawingProxy::Decode(const std::string& str, uint32_t id) {
 
   if (type == DrawingType::LINE) {
     std::vector<polyline> polylines;
-    std::string color = "#FF0000";
-    double width = 1.0;
+    std::string default_color = "#FF0000";
+    double default_width = 1.0;
     for (auto itr = decoded_json.begin(); itr != decoded_json.end(); itr++) {
       std::string key = itr.key();
+      if (key == "color") {
+        default_color = itr.value().get<std::string>();
+      }
+      if (key == "width") {
+        default_width = itr.value().get<double>();
+      }
       if (key == "vertices") {
         if (itr.value().is_array()) {
-          for (const auto& line : itr.value()) {
+          for (const auto& line_or_line_dict : itr.value()) {
+            Json line;
+            std::string color = default_color;
+            double width = default_width;
+
+            if (line_or_line_dict.is_object()) {
+              line = line_or_line_dict["vertices"];
+              if (line_or_line_dict.contains("color")) {
+                color = line_or_line_dict["color"].get<std::string>();
+              }
+              if (line_or_line_dict.contains("width")) {
+                width = line_or_line_dict["width"].get<double>();
+              }
+            } else {
+              line = line_or_line_dict;
+            }
+
             if (line.is_array()) {
               polyline polyline;
               for (const auto& point : line) {
@@ -167,6 +189,8 @@ void DrawingProxy::Decode(const std::string& str, uint32_t id) {
                   break;
                 }
               }
+              polyline.color = color;
+              polyline.width = width;
               polylines.push_back(std::move(polyline));
             } else {
               CARLAVIZ_LOG_ERROR("One client should send multiple lines");
@@ -178,17 +202,8 @@ void DrawingProxy::Decode(const std::string& str, uint32_t id) {
           break;
         }
       }
-      if (key == "color") {
-        color = itr.value().get<std::string>();
-      }
-      if (key == "width") {
-        width = itr.value().get<double>();
-      }
     }
-    for (auto& polyline : polylines) {
-      polyline.color = color;
-      polyline.width = width;
-    }
+
     polyline_update_lock_.lock();
     polylines_[id] = std::move(polylines);
     polyline_update_lock_.unlock();

@@ -22,8 +22,9 @@ class CarlaPainter(object):
         Args:
             lines (list): list of polylines to draw. Should be in the format of
                           [line_1, line_2, line_3...]. Every line should be in the
-                          format of [point_1, point_2, point_3...]. Every point should
-                          be in the format of [p_x, p_y, p_z].
+                          format of [point_1, point_2, point_3...] or
+                          { vertices: [point_1, point_2, point_3...], color: '#FFFFFF', width: 1.0}.
+                          Every point should be in the format of [p_x, p_y, p_z].
             color (str, optional): color represented in str. Defaults to '#00FF00'.
             width (float, optional): line width. Defaults to 2.5.
 
@@ -36,15 +37,7 @@ class CarlaPainter(object):
             self._logger.warning('no lines will be drawn')
             return
         if isinstance(lines[0], list) and not isinstance(lines[0][0], list):
-            data_dict = {}
-            data_dict['type'] = 'line'
-            data_dict['vertices'] = [lines]
-            data_dict['color'] = color
-            data_dict['width'] = width
-            try:
-                self._ws.send(json.dumps(data_dict))
-            except Exception as e:
-                self._logger.warning(e)
+            self._draw_polylines([lines], color, width)
         else:
             self._draw_polylines(lines, color, width)
 
