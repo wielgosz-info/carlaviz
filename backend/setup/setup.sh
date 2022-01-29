@@ -248,6 +248,17 @@ rm -Rf ${LIBPNG_BASENAME}-install
 
 CARLA_VERSION=$(get_git_repository_version)
 
+log "Retrieving CARLA."
+
+wget https://github.com/carla-simulator/carla/archive/refs/tags/${CARLA_VERSION}.tar.gz
+tar xvzf ${CARLA_VERSION}.tar.gz
+
+mkdir -p /home/carla/carlaviz/backend/third_party
+cp -r carla-${CARLA_VERSION}/LibCarla /home/carla/carlaviz/backend/third_party/LibCarla
+
+rm ${CARLA_VERSION}.tar.gz
+rm -Rf carla-${CARLA_VERSION}
+
 log "CARLA version ${CARLA_VERSION}."
 
 VERSION_H_FILE=${CARLA_ROOT_FOLDER}/third_party/LibCarla/source/carla/Version.h

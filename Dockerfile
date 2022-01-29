@@ -48,7 +48,6 @@ RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.11.2/p
 
 # setup everything for building
 COPY ./backend/setup /home/carla/carlaviz/backend/setup
-COPY ./backend/third_party/LibCarla /home/carla/carlaviz/backend/third_party/LibCarla
 WORKDIR /home/carla/carlaviz/backend/setup
 RUN bash ./setup.sh
 
