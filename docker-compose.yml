@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  viz:
+    image: wielgoszinfo/carlaviz:0.9.12-develop
+    entrypoint: [ "/bin/bash", "-c", "sleep 10 && ./docker/run.sh" ]
+    expose:
+      - 8089
+    ports:
+      - "127.0.0.1::8080"
+      - "127.0.0.1:${CARLAVIZ_BACKEND_MAPPED_PORT:-49165}:8081"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      CARLA_SERVER_HOST: server
+      CARLA_SERVER_PORT: ${CARLA_SERVER_PORT:-2000}
+    depends_on:
+      - server
