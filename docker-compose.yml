@@ -10,7 +10,7 @@ services:
     expose:
       - 8089
     ports:
-      - "127.0.0.1::8080"
+      - "127.0.0.1:${CARLAVIZ_FRONTEND_MAPPED_PORT:-49164}:8080"
       - "127.0.0.1:${CARLAVIZ_BACKEND_MAPPED_PORT:-49165}:8081"
     volumes:
       - /etc/localtime:/etc/localtime:ro
