@@ -2,6 +2,9 @@ version: "3.9"
 
 services:
   viz:
+    build:
+      context: ${VIZ_DIR:-.}
+      dockerfile: Dockerfile
     image: wielgoszinfo/carlaviz:0.9.12-develop
     entrypoint: [ "/bin/bash", "-c", "sleep 10 && ./docker/run.sh" ]
     expose:
