@@ -5,7 +5,7 @@ services:
     build:
       context: ${VIZ_DIR:-.}
       dockerfile: Dockerfile
-    image: wielgoszinfo/carlaviz:0.9.13-develop
+    image: ${IMAGES_NAMESPACE:-wielgoszinfo}/carlaviz:0.9.13-develop
     entrypoint: [ "/bin/bash", "-c", "sleep 15 && ./docker/run.sh" ]
     expose:
       - 8089
